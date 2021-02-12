@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const consoleLog = require('./consoleLog')
 const utils = require('./utils')
-const User = require('/home/ritsu/dev/discord-forum-notify-bot/user')
+const User = require('user')
 const axios = require('axios')
 
 let commandParser = (message, prefix) => {
