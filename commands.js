@@ -86,7 +86,7 @@ let login = async (client, message) => {
         user.setAuthCookie(authCookie);
         user.setIsLogged(true);
         user.update();
-        message.author.send(`You has been successfully authorized`);
+        message.author.send(`You have been successfully authorized`);
         message.author.send(`Type ${utils.getConfigParam('COMMAND_PREFIX')}on for enable notifications from dota2.ru`);
     }
 
