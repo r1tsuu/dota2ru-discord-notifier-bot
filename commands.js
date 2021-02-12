@@ -26,7 +26,7 @@ let shutdown = async (client, message) => {
     consoleLog.print("");
     await message.author.send("Bye");
     client.destroy();
-    return 1;
+    return 0;
 }
 
 /**
