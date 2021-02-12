@@ -1,6 +1,7 @@
 const config = require("./config.json");
 const axios = require('axios');
 const Discord = require("discord.js");
+const io = require('socket.io-client')
 
 /**
  * @param {number} ms
@@ -43,10 +44,8 @@ let getConfigParam = (paramName) => {
     return param;
 }
 
-let getAuthCookie = (response) => {
-    let notParsed = response.headers['set-cookie'][1]
-    return (notParsed != null) ? notParsed.substring(notParsed.indexOf('='), notParsed.indexOf(';')) :
-        null
+let getCookie = (response) => {
+    return response.headers['set-cookie']
 }
 
 let getRequestConfig = (login, password) => ({
@@ -69,13 +68,24 @@ let auth = async (login, password) => {
         let response = await axios(getRequestConfig(login, password))
         return {
             status: response.data.status,
-            auth_cookie: getAuthCookie(response)
+            cookie: response.headers['set-cookie']
         }
     } catch (error) {
         console.log(error);
     }
 }
 
+( async() => {
+    const socket = io('https://dota2.ru', {
+        reconnectionAttemps: 10,
+        reconnectionDelay: 5e3,
+        extraHeaders: {
+            Cookie: "forum_auth=JhCII3mRpziLcSLH142DLI%2FW0Iiqu%2FSC%2BNhZFwGd07vctXTy2EzmBrPiOX2I0v4JcEbldEDhNVGiyrzOW%2B7xjjrfwWdClWLEtKrsJEi%2FyOuvrRTqQgYXDGjxBKdthv1Pgr2MiB7lEu8v79y3s9it%2BpYJgXa1tTa5vTcZFtMTdT8%3D"
+        }
+    })
+    socket.on('connect', () => console.log("connected"));
+    socket.on('notification', (data) => console.log(data));
+})()
 module.exports = {
     sleep,
     getRandomInt,
