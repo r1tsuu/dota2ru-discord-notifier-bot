@@ -5,12 +5,15 @@ const Database = require('./database')
  * @description Model of user
  */
 module.exports = class User extends Database {
-    constructor(discordId, isLogged=false, authCookie='none') {
+    /**
+     * @param {string} discordId
+     */
+    constructor(discordId) {
         super();
         this.collection_name = "Users";
         this.discordId = discordId;
-        this.isLogged = isLogged;
-        this.authCookie = authCookie;
+        this.authCookie = 'none';
+        this.notifyEnabled = false;
     }
 
     async findUser() {
@@ -23,8 +26,8 @@ module.exports = class User extends Database {
             const collection = db.collection(this.collection_name);
             let userData = await collection.findOne({discord_id: this.discordId});
             if (userData) {
-                this.isLogged = userData.is_logged;
                 this.authCookie = userData.auth_cookie;
+                this.notifyEnabled = userData.notify_enabled;
             }
             return userData;
         } catch (error) {
@@ -45,8 +48,8 @@ module.exports = class User extends Database {
             return await collection.insertOne(
                 {
                     discord_id: this.discordId,
-                    is_logged: this.isLogged,
-                    auth_cookie: this.authCookie
+                    auth_cookie: this.authCookie,
+                    notify_enabled: this.notifyEnabled
                 }
             );
 
@@ -58,7 +61,7 @@ module.exports = class User extends Database {
     }
 
     // Updates values in database
-    async update() {
+    async updateDb() {
         const client = await this.getClient();
         if (!client) {
             return
@@ -68,7 +71,7 @@ module.exports = class User extends Database {
             const collection = db.collection(this.collection_name);
             await collection.updateOne(
                 { discord_id: this.discordId },
-                { $set: {"is_logged": this.isLogged, "auth_cookie": this.authCookie }},
+                { $set: {"auth_cookie": this.authCookie, "notify_enabled": this.notifyEnabled }},
                 { upsert: true }
             );
         } catch (error) {
@@ -86,12 +89,12 @@ module.exports = class User extends Database {
         return this.authCookie;
     }
 
-    setIsLogged(isLogged) {
-        this.isLogged = isLogged;
+    getNotifyEnabled() {
+        return this.notifyEnabled;
     }
 
-    getIsLogged() {
-        return this.isLogged;
+    setNotifyEnable(notifyEnabled) {
+        this.notifyEnabled = notifyEnabled;
     }
 
 }

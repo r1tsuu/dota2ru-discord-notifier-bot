@@ -3,7 +3,6 @@
   "DISCORD_BOT_TOKEN": "$DISCORD_BOT_TOKEN",
   "BOT_OWNER_ID": "$BOT_OWNER_ID",
   "COMMAND_PREFIX": "!",
-  "NO_DBMS_MODE": false,
   "DBMS": "MongoDB",
   "DB_URL": "mongodb://localhost:27017",
   "DB_NAME": "app_db"

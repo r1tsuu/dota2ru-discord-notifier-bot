@@ -5,12 +5,11 @@ const io = require('socket.io-client')
 
 /**
  * @param {number} ms
- * @return {Promise<unknown>}
+ * @return {Promise<void>}
  */
 let sleep = (ms) => {
     return new Promise( (resolve) => {setTimeout(resolve, ms)});
 }
-Promise.resolve()
 
 /**
  * @param {number} min
@@ -27,27 +26,24 @@ let getRandomInt = (min, max) => {
 /**
  * @param {string} paramName
  * @returns {string|string}
- * @description Returns parameter by name from config.json or ENV
+ * @description Returns value of parameter by name from config.json or ENV
  */
 let getConfigParam = (paramName) => {
     if (typeof config[paramName] === 'undefined') {
         throw new Error(`Parameter ${paramName} doesn't exist!`);
     }
-    let param = config[paramName];
-    if (param[0] === '$') {
-        let VAR_NAME = param.substring(1);
+    let paramValue = config[paramName];
+    if (paramValue[0] === '$') {
+        let VAR_NAME = paramValue.substring(1);
         if (typeof process.env[VAR_NAME] != 'undefined') {
             return process.env[VAR_NAME];
         }
         throw new Error(`Env variable ${VAR_NAME} doesn't exist`);
     }
-    return param;
+    return paramValue;
 }
 
-let getCookie = (response) => {
-    return response.headers['set-cookie']
-}
-
+// Returns config of axios https://dota2.ru auth request
 let getRequestConfig = (login, password) => ({
     method: 'post',
     url: 'https://dota2.ru/forum/api/user/auth',
@@ -63,34 +59,30 @@ let getRequestConfig = (login, password) => ({
     }
 })
 
+/**
+ * @param {string} login
+ * @param {string} password
+ * @return {Promise<{authCookie: string, status: string}>}
+ * @description Sending to https://dota2.ru auth request
+ */
 let auth = async (login, password) => {
     try {
         let response = await axios(getRequestConfig(login, password))
         return {
             status: response.data.status,
-            cookie: response.headers['set-cookie']
+            authCookie: response.headers['set-cookie'][1]
         }
     } catch (error) {
         console.log(error);
     }
 }
 
-( async() => {
-    const socket = io('https://dota2.ru', {
-        reconnectionAttemps: 10,
-        reconnectionDelay: 5e3,
-        extraHeaders: {
-            Cookie: "forum_auth=JhCII3mRpziLcSLH142DLI%2FW0Iiqu%2FSC%2BNhZFwGd07vctXTy2EzmBrPiOX2I0v4JcEbldEDhNVGiyrzOW%2B7xjjrfwWdClWLEtKrsJEi%2FyOuvrRTqQgYXDGjxBKdthv1Pgr2MiB7lEu8v79y3s9it%2BpYJgXa1tTa5vTcZFtMTdT8%3D"
-        }
-    })
-    socket.on('connect', () => console.log("connected"));
-    socket.on('notification', (data) => console.log(data));
-})()
 module.exports = {
     sleep,
     getRandomInt,
     getConfigParam,
     auth
 }
+
 
 
