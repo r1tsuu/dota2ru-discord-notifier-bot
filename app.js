@@ -45,11 +45,7 @@ let createDiscordBot = async function(token) {
             }
         }
         consoleLog.commandCall(parsed.command.name, message.author.username, parsed.args)
-        let status = await parsed.command.action(client, message, parsed.args)
-        switch(status) {
-            case 0:
-                return 0;
-        }
+        await parsed.command.action(client, message, parsed.args)
     })
 }
 
