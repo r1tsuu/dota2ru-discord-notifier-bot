@@ -4,7 +4,7 @@
   "BOT_OWNER_ID": "$BOT_OWNER_ID",
   "COMMAND_PREFIX": "!",
   "DBMS": "MongoDB",
-  "DB_URL": "mongodb://localhost:27017",
+  "DB_URL": "$DB_URL",
   "DB_NAME": "app_db"
 }
 
