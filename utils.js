@@ -77,6 +77,7 @@ let auth = async (login, password) => {
     }
 }
 
+// Remove from message HTML tags
 let getThisWithRemovedTags = (message) => {
     return message.replace(/<\/?[^>]+(>|$)/g, "");
 }
@@ -87,6 +88,3 @@ module.exports = {
     auth,
     getThisWithRemovedTags
 }
-
-
-
