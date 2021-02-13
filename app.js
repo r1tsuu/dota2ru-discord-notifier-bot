@@ -50,10 +50,8 @@ let createDiscordBot = async function(token) {
 }
 
 let token = utils.getConfigParam('DISCORD_BOT_TOKEN');
-
 (async () => {
     await createDiscordBot(token);
-    consoleLog.print("Process exit");
 })()
 
 

@@ -1,4 +1,3 @@
-const utils = require("./utils");
 const Database = require('./database')
 
 /**
@@ -12,11 +11,11 @@ module.exports = class User extends Database {
         super();
         this.collection_name = "Users";
         this.discordId = discordId;
-        this.authCookie = 'none';
+        this.authCookie = null;
         this.notifyEnabled = false;
     }
 
-    async findUser() {
+    async doesExist() {
         const client = await this.getClient();
         if (!client) {
             return
@@ -25,15 +24,29 @@ module.exports = class User extends Database {
             const db = client.db(this.db_name);
             const collection = db.collection(this.collection_name);
             let userData = await collection.findOne({discord_id: this.discordId});
-            if (userData) {
-                this.authCookie = userData.auth_cookie;
-                this.notifyEnabled = userData.notify_enabled;
-            }
-            return userData;
+            return (userData !== null)
         } catch (error) {
             console.log(error);
         } finally {
             await client.close();
+        }
+    }
+
+    async updateFromDb() {
+        const client = await this.getClient();
+        if (!client) {
+            return;
+        }
+        try {
+            const db = client.db(this.db_name);
+            const collection = db.collection(this.collection_name);
+            let userData = await collection.findOne({discord_id: this.discordId});
+            this.authCookie = userData.auth_cookie;
+            this.notifyEnabled = userData.notify_enabled;
+        } catch (error) {
+            console.log(error);
+        } finally {
+            client.close();
         }
     }
 

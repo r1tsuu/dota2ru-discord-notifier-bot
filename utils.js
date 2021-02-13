@@ -77,11 +77,15 @@ let auth = async (login, password) => {
     }
 }
 
+let getThisWithRemovedTags = (message) => {
+    return message.replace(/<\/?[^>]+(>|$)/g, "");
+}
 module.exports = {
     sleep,
     getRandomInt,
     getConfigParam,
-    auth
+    auth,
+    getThisWithRemovedTags
 }
 
 
