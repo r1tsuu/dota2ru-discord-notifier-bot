@@ -18,7 +18,7 @@ let printArgs = (arguments) => {
     console.log(coloredArgs.reduce(argsToMessage));
 }
 
-// More cooler and version of console.log
+// More cooler version of console.log
 let print = (string) => {
     printArgs(string.split(' '))
 };
@@ -28,7 +28,6 @@ let print = (string) => {
 let printLines = async (...args) => {
     let printWithDelayAfter = async (message) => {
         print(message);
-        // Delay time equals last arg if it's a number
         await utils.sleep(delay);
     }
     for (let i in args) {
