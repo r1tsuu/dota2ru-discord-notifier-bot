@@ -53,21 +53,3 @@ let token = utils.getConfigParam('DISCORD_BOT_TOKEN');
 (async () => {
     await createDiscordBot(token);
 })()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
