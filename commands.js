@@ -53,7 +53,7 @@ let start = async (client, message) => {
         consoleLog.print(`User ${message.author.username} session has been started`)
         return 0;
     }
-    await message.author.send(`You are already started, for turn on receiving notifications type ${getPrefix()}on`);
+    await message.author.send(`You are already started, type ${getPrefix()}on for turn on receiving notifications`);
     return 0;
 }
 
